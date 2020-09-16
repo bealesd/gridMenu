@@ -19,7 +19,6 @@
 
 #app>#headerBackground {
     background-color: var(--header-background-color);
-    /* height: calc(var(--header-font-size) + var(--header-vertical-padding)*2 - var(--header-border-size)); */
     height: calc(var(--header-font-size) + var(--header-vertical-padding)*2 + var(--header-border-size)-1px);
     width: 100vw;
     border-bottom: var(--header-border-size) solid black;
@@ -35,14 +34,22 @@
 }
 
 .menu {
-    grid-column-gap: 5px;
-    text-align: center;
+    padding-bottom: var(--header-vertical-padding);
+    padding-top: var(--header-vertical-padding);
 }
 
 [class*="MenuItem"]:hover,
 .menu:hover {
     color: white !important;
     background-color: black !important;
+}
+
+[class*="menu"],
+[class*="subMenuItem"],
+[class*="childMenuItem"] {
+    text-align: left;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .subMenuItem,
