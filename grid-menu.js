@@ -1,8 +1,19 @@
 GridMenu = function() {
     class GridMenu {
         constructor() {
+            this.loadRobotoFont();
             const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu/grid-menu.min.css';
             this.loadCss(href);
+        }
+        loadRobotoFont() {
+            const link = document.createElement("link");
+
+            link.type = "text/css";
+            link.rel = "stylesheet";
+            link.media = "screen,print";
+            link.href = "https://fonts.googleapis.com/css2?family=Roboto&display=swap";
+
+            document.querySelector("head").appendChild(link);
         }
 
         loadCss(href) {
@@ -17,11 +28,20 @@ GridMenu = function() {
         }
 
         setup(rowHeight, colWidth, padding) {
+            this.createHeaderBackground();
             this.setGridDimensions(rowHeight, colWidth, padding);
             this.positionOfSubMenuItems();
             this.positionOfChildMenuItems();
             this.onMenuClick();
             this.onSubMenuClick();
+        }
+
+        createHeaderBackground() {
+            const headerBackground = document.createElement("div");
+            headerBackground.id = 'headerBackground';
+
+            const app = document.querySelector('#app');
+            appp.insertBefore(headerBackground, app.children[0]);
         }
 
         setGridDimensions(rowHeight, colWidth, padding) {
@@ -100,6 +120,7 @@ GridMenu = function() {
                         });
                         menu.dataset.show = 'true';
                     }
+
                 });
             });
 

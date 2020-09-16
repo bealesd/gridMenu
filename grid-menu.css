@@ -1,21 +1,71 @@
+:root {
+    --header-height: 24px;
+    --header-border-size: 1px;
+    --header-background-color: white;
+    --footer-height: 14px;
+    --footer-vertical-padding: 4px;
+}
+
+#app {
+    z-index: 1;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: var(--header-height) 1fr calc(2 * var(--footer-vertical-padding) + var(--footer-height));
+    grid-template-areas: 'header''main''footer';
+}
+
+#app>#headerBackground {
+    background-color: var(--header-background-color);
+    height: calc(var(--header-height) - var(--header-border-size));
+    width: 100vw;
+    border-bottom: var(--header-border-size) solid black;
+}
+
 #headerGrid {
     z-index: 10;
     position: fixed;
     display: grid;
+    font-family: Roboto;
+    font-size: 22px;
 }
 
-.hidden {
-    visibility: hidden;
-}
-
-#headerGrid>div {
-    background-color: white;
-    color: black;
-    border: solid 1px black;
+.menu {
+    grid-column-gap: 5px;
+    text-align: center;
 }
 
 [class*="MenuItem"]:hover,
 .menu:hover {
     color: white !important;
     background-color: black !important;
+}
+
+.subMenuItem,
+.childMenuItem {
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+}
+
+#app>main {
+    grid-area: main;
+    overflow: auto;
+    padding: 0px 5px 10px 5px;
+    background-color: rgb(186, 222, 245);
+}
+
+#app>footer {
+    grid-area: footer;
+    color: black;
+    background-color: white;
+    padding: var(--footer-vertical-padding) 5px;
+    height: caLc(var(--footer-height) - var(--header-border-size));
+    border-top: var(--header-border-size) solid black;
+    font-family: Roboto;
+    font-size: 12px;
+}
+
+.hidden {
+    visibility: hidden;
 }
