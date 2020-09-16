@@ -1,8 +1,8 @@
 GridMenu = function() {
     class GridMenu {
         constructor() {
-            // const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu/lineNumberer/lineNumberer.min.css';
-            this.loadCss('grid-menu.css');
+            const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu/grid-menu.min.css';
+            this.loadCss(href);
         }
 
         loadCss(href) {
