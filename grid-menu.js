@@ -2,7 +2,7 @@ GridMenu = function() {
     class GridMenu {
         constructor() {
             this.loadRobotoFont();
-            const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@26c622602aadd2e0b0ad3c608ced4789dee2fe59/grid-menu.min.css';
+            const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@6614dcba52974f2cdce0163cb5b57166968b85f0/grid-menu.min.css';
             this.loadCss(href);
         }
 
@@ -56,7 +56,7 @@ GridMenu = function() {
                 const col = parseInt(menu.dataset.col);
 
                 subMenuItem.style.gridRow = `1 / span 1`;
-                subMenuItem.style.gridColumn = `${col+1} / span 1`;
+                subMenuItem.style.gridColumn = `${col} / span 1`;
             });
         }
 
@@ -66,7 +66,7 @@ GridMenu = function() {
                 const col = parseInt(subMenuItem.dataset.col);
 
                 subMenuItem.style.gridRow = `${row} / span 1`;
-                subMenuItem.style.gridColumn = `${col+1} / span 1`;
+                subMenuItem.style.gridColumn = `${col} / span 1`;
                 subMenuItem.classList.add('hidden');
             });
         }
@@ -76,7 +76,7 @@ GridMenu = function() {
                 const subRow = parseInt(childMenuItem.dataset.row);
                 const parentRow = parseInt(childMenuItem.dataset.parentRow);
 
-                const col = parseInt(childMenuItem.dataset.parentCol) + 1 + 1;
+                const col = parseInt(childMenuItem.dataset.parentCol) + 1;
 
                 const row = parentRow + subRow;
                 childMenuItem.style.gridRow = `${row} / span 1`;

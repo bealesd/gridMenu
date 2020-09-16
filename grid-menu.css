@@ -28,8 +28,7 @@
     z-index: 10;
     position: fixed;
     display: grid;
-    grid-template-rows: repeat(10, calc(var(--header-vertical-padding)*2 + var(--header-font-size) - var(--header-border-size)));
-    grid-template-columns: 20px repeat(10, auto);
+    grid-template-rows: repeat(20, calc(var(--header-vertical-padding)*2 + var(--header-font-size) - var(--header-border-size)));
     font-family: Roboto;
     font-size: var(--header-font-size);
 }
@@ -37,6 +36,10 @@
 .menu {
     padding-bottom: var(--header-vertical-padding);
     padding-top: var(--header-vertical-padding);
+}
+
+.menu:nth-of-type(1) {
+    margin-left: 20px;
 }
 
 [class*="MenuItem"]:hover,
