@@ -2,7 +2,7 @@ GridMenu = function() {
     class GridMenu {
         constructor() {
             this.loadRobotoFont();
-            const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@d2619747728f6e4e0cd93517337fdd64d107ef68/grid-menu.min.css';
+            const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@f2039ca1617c4f6b19e6ef9ac611a71c50f784cf/grid-menu.min.css';
             this.loadCss(href);
         }
 
