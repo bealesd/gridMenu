@@ -5,6 +5,7 @@ GridMenu = function() {
             const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu/grid-menu.min.css';
             this.loadCss(href);
         }
+
         loadRobotoFont() {
             const link = document.createElement("link");
 
@@ -41,7 +42,7 @@ GridMenu = function() {
             headerBackground.id = 'headerBackground';
 
             const app = document.querySelector('#app');
-            appp.insertBefore(headerBackground, app.children[0]);
+            app.insertBefore(headerBackground, app.children[0]);
         }
 
         setGridDimensions(rowHeight, colWidth, padding) {
