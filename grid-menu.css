@@ -1,0 +1,21 @@
+#headerGrid {
+    z-index: 10;
+    position: fixed;
+    display: grid;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+#headerGrid>div {
+    background-color: white;
+    color: black;
+    border: solid 1px black;
+}
+
+[class*="MenuItem"]:hover,
+.menu:hover {
+    color: white !important;
+    background-color: black !important;
+}
