@@ -28,9 +28,9 @@ GridMenu = function() {
             document.querySelector("head").appendChild(link);
         }
 
-        setup(rowHeight, colWidth, padding) {
+        setup(rowHeight, colWidth) {
             this.createHeaderBackground();
-            this.setGridDimensions(rowHeight, colWidth, padding);
+            this.setGridDimensions(rowHeight, colWidth);
             this.positionOfSubMenuItems();
             this.positionOfChildMenuItems();
             this.onMenuClick();
@@ -45,14 +45,10 @@ GridMenu = function() {
             app.insertBefore(headerBackground, app.children[0]);
         }
 
-        setGridDimensions(rowHeight, colWidth, padding) {
+        setGridDimensions(rowHeight, colWidth) {
             const headerGrid = document.querySelector('#headerGrid');
             headerGrid.style.gridTemplateColumns = `repeat(20, ${colWidth})`;
             headerGrid.style.gridTemplateRows = `repeat(20, ${rowHeight})`;
-
-            document.querySelectorAll('#headerGrid>div').forEach((div) => {
-                div.style.padding = padding;
-            });
         }
 
         positionMenuItems() {

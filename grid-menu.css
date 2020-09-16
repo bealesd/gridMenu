@@ -19,7 +19,8 @@
 
 #app>#headerBackground {
     background-color: var(--header-background-color);
-    height: calc(var(--header-font-size) + var(--header-vertical-padding)*2 - var(--header-border-size));
+    /* height: calc(var(--header-font-size) + var(--header-vertical-padding)*2 - var(--header-border-size)); */
+    height: calc(var(--header-font-size) + var(--header-vertical-padding)*2 + var(--header-border-size)-1px);
     width: 100vw;
     border-bottom: var(--header-border-size) solid black;
 }
