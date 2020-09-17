@@ -88,7 +88,7 @@ GridMenu = function() {
                     const actualRow = parseInt(parentRow) + j;
                     if (actualRow > subMenuRowCount) {
                         //add border left
-                        const currentRow = document.querySelector(`[data-row='${actualRow}'][data-parent-row='${parentRow}'][data-parent-col='${parentCol}'].childMenuItem`);
+                        const currentRow = document.querySelector(`[data-row='${j}'][data-parent-row='${parentRow}'][data-parent-col='${parentCol}'].childMenuItem`);
                         currentRow.style.borderLeft = '1px solid black';
                     }
                 }
