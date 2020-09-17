@@ -55,7 +55,7 @@ GridMenu = function() {
                 const maxRow = rowCountPerCoulumn[column];
 
                 const lastRow = document.querySelector(`[data-row='${maxRow}'][data-col='${column}'].subMenuItem`);
-                lastRow.style.borderBottom = '1px solid black !important;';
+                lastRow.style.borderBottom = '1px solid black';
             }
         }
 
