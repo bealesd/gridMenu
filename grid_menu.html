@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<style>
+    body {
+        margin: 0;
+    }
+</style>
+
+<head>
+    <script src="https://cdn.jsdelivr.net/gh/bealesd/GridMenu@fd0e56e58347ddece329922b752d3debbb345b57/grid-menu.min.js"></script>
+</head>
+
+<body>
+
+    <div id="app">
+        <header id="headerGrid">
+
+            <div class="menu" data-show="false" data-col="1">
+                File
+            </div>
+
+            <div class="subMenuItem" data-col="1" data-row="1">
+                Open
+            </div>
+
+            <div class="subMenuItem" data-col="1" data-row="2">
+                Save
+            </div>
+
+            <div class="childMenuItem" data-parent-col="1" data-parent-row="2" data-row="1">
+                All
+            </div>
+
+            <div class="childMenuItem" data-parent-col="1" data-parent-row="2" data-row="2">
+                One
+            </div>
+
+            <div class="subMenuItem" data-col="1" data-row="3">
+                Close
+            </div>
+
+
+            <div class="menu" data-show="false" data-col="2">
+                Edit
+            </div>
+
+            <div class="subMenuItem" data-col="2" data-row="1">
+                Undo
+            </div>
+
+            <div class="subMenuItem" data-col="2" data-row="2">
+                Redo
+            </div>
+
+            <div class="menu" data-show="false" data-col="3">
+                About
+            </div>
+
+            <div class="subMenuItem" data-col="3" data-row="1">
+                Info
+            </div>
+
+            <div class="childMenuItem" data-parent-col="3" data-parent-row="1" data-row="1">
+                Dave
+            </div>
+
+        </header>
+
+        <main>
+            <h1> Lorem Ipsum passage</h1>
+            <p>
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+                in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+            </p>
+            <h1> Lorem Ipsum passage</h1>
+            <p>
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+                in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+            </p>
+            <h1> Lorem Ipsum passage</h1>
+            <p>
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+                in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+            </p>
+        </main>
+
+        <footer>Copyright David Beales</footer>
+    </div>
+
+</body>
+
+<script>
+    window.addEventListener("load", () => {
+        GridMenu.setup('20px', 'auto');
+    });
+</script>
+
+</html>

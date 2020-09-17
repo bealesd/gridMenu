@@ -1,7 +1,6 @@
 GridMenu = function() {
     class GridMenu {
         //TODO remove margin, add small column 20px
-        //TODO remove inner sub menu divide lines, allow user to specify a line, or use a line break?
         constructor() {
             this.loadRobotoFont();
             const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@latest/grid-menu.min.css';
@@ -82,7 +81,19 @@ GridMenu = function() {
 
                 const firstRow = document.querySelector(`[data-row='1'][data-parent-row='${parentRow}'][data-parent-col='${parentCol}'].childMenuItem`);
                 firstRow.style.borderTop = '1px solid black';
+
+                // border left for each row?
+                const subMenuRowCount = document.querySelectorAll(`[data-col='${parentCol}'].subMenuItem`).length;
+                for (let j = 0; j < maxRow; j++) {
+                    const actualRow = parseInt(parentRow) + j;
+                    if (actualRow > subMenuRowCount) {
+                        //add border left
+                        const currentRow = document.querySelector(`[data-row='${actualRow}'][data-parent-row='${parentRow}'][data-parent-col='${parentCol}'].childMenuItem`);
+                        currentRow.style.borderLeft = '1px solid black';
+                    }
+                }
             }
+
         }
 
         createHeaderBackground() {
