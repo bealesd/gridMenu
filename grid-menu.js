@@ -36,6 +36,7 @@ GridMenu = function() {
             this.positionOfSubMenuItems();
             this.positionOfChildMenuItems();
             this.addSubMenuBorders();
+            this.addChildMenuBorders();
             this.onMenuClick();
             this.onSubMenuClick();
         }
@@ -56,6 +57,31 @@ GridMenu = function() {
 
                 const lastRow = document.querySelector(`[data-row='${maxRow}'][data-col='${column}'].subMenuItem`);
                 lastRow.style.borderBottom = '1px solid black';
+            }
+        }
+
+        addChildMenuBorders() {
+            const childMenuItems = document.querySelectorAll(".childMenuItem");
+            const rowCountPerCoulumn = {};
+            [...childMenuItems].map(elem => { return { 'col': elem.dataset.parentCol, 'row': elem.dataset.parentRow } })
+                .forEach((json) => {
+                    const key = `${json.row}-${json.col}`;
+                    if (rowCountPerCoulumn.hasOwnProperty(key))
+                        rowCountPerCoulumn[key] = rowCountPerCoulumn[key] + 1;
+                    else
+                        rowCountPerCoulumn[key] = 1;
+                })
+            for (let i = 0; i < Object.keys(rowCountPerCoulumn).length; i++) {
+                const rowColKey = Object.keys(rowCountPerCoulumn)[i];
+                const maxRow = rowCountPerCoulumn[rowColKey];
+                const parentRow = rowColKey.split('-')[0];
+                const parentCol = rowColKey.split('-')[1];
+
+                const lastRow = document.querySelector(`[data-row='${maxRow}'][data-parent-row='${parentRow}'][data-parent-col='${parentCol}'].childMenuItem`);
+                lastRow.style.borderBottom = '1px solid black';
+
+                const firstRow = document.querySelector(`[data-row='1'][data-parent-row='${parentRow}'][data-parent-col='${parentCol}'].childMenuItem`);
+                firstRow.style.borderBottom = '1px solid black';
             }
         }
 
