@@ -81,7 +81,7 @@ GridMenu = function() {
                 lastRow.style.borderBottom = '1px solid black';
 
                 const firstRow = document.querySelector(`[data-row='1'][data-parent-row='${parentRow}'][data-parent-col='${parentCol}'].childMenuItem`);
-                firstRow.style.borderBottom = '1px solid black';
+                firstRow.style.borderTop = '1px solid black';
             }
         }
 
