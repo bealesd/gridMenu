@@ -61,7 +61,8 @@
 .childMenuItem {
     background-color: white;
     color: black;
-    border: 1px solid black;
+    border-left: solid black 1px;
+    border-right: solid black 1px;
     padding-bottom: var(--header-vertical-padding);
     padding-top: var(--header-vertical-padding);
 }

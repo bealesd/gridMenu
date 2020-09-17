@@ -1,8 +1,10 @@
 GridMenu = function() {
     class GridMenu {
+        //TODO remove margin, add small column 20px
+        //TODO remove inner sub menu divide lines, allow user to specify a line, or use a line break?
         constructor() {
             this.loadRobotoFont();
-            const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@f2039ca1617c4f6b19e6ef9ac611a71c50f784cf/grid-menu.min.css';
+            const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@latest/grid-menu.min.css';
             this.loadCss(href);
         }
 
@@ -33,8 +35,28 @@ GridMenu = function() {
             this.setGridDimensions(rowHeight, colWidth);
             this.positionOfSubMenuItems();
             this.positionOfChildMenuItems();
+            this.addSubMenuBorders();
             this.onMenuClick();
             this.onSubMenuClick();
+        }
+
+        addSubMenuBorders() {
+            const subMenuItems = document.querySelectorAll("[data-col].subMenuItem");
+            const rowCountPerCoulumn = {};
+            [...subMenuItems].map(elem => parseInt(elem.dataset.col)).
+            forEach((num) => {
+                if (rowCountPerCoulumn.hasOwnProperty(num))
+                    rowCountPerCoulumn[num] = rowCountPerCoulumn[num] + 1;
+                else
+                    rowCountPerCoulumn[num] = 1;
+            })
+            for (let i = 0; i < Object.keys(rowCountPerCoulumn).length; i++) {
+                const column = Object.keys(rowCountPerCoulumn)[i];
+                const maxRow = rowCountPerCoulumn[column];
+
+                const lastRow = document.querySelector(`[data-row='${maxRow}'][data-col='${column}'].subMenuItem`);
+                lastRow.style.borderBottom = '1px solid black !important;';
+            }
         }
 
         createHeaderBackground() {
