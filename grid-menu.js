@@ -141,31 +141,25 @@ GridMenu = function() {
             const menus = document.querySelectorAll('.menu');
             menus.forEach((menu) => {
                 menu.addEventListener('click', () => {
-                    const shown = menu.dataset.show;
-
+                    const menuShown = menu.dataset.show === 'true';
                     const col = parseInt(menu.dataset.col);
-
                     const menuItems = document.querySelectorAll(`[data-parent-col="${col}"],[data-col="${col}"][class*="subMenuItem"]`);
 
                     // clear all menu items
                     document.querySelectorAll(`[data-parent-col],[data-col][class*="subMenuItem"]`).forEach((subMenuItem) => {
                         subMenuItem.classList.add('hidden');
+                        this.hideSubMenuItemChildren(subMenuItem);
                     });
                     // turn off all menus
                     menus.forEach((menu) => {
                         menu.dataset.show = 'false';
                     });
 
-                    // turning off menu items
-                    if (shown === 'true') {
-                        menu.dataset.show = 'false';
-                    }
-                    // turn on menu items
-                    else if (shown === 'false') {
+                    if (menuShown) menu.dataset.show = 'false';
+                    else if (!menuShown) {
                         menuItems.forEach((elem) => {
-                            if (elem.classList.contains('subMenuItem')) {
+                            if (elem.classList.contains('subMenuItem'))
                                 elem.classList.remove('hidden');
-                            }
                         });
                         menu.dataset.show = 'true';
                     }
@@ -173,35 +167,59 @@ GridMenu = function() {
             });
         }
 
+        isSunMenuOpen(subMenuItem) {
+            const subMenuSpan = subMenuItem.querySelector('span');
+            return subMenuSpan.classList.contains('down');
+        }
+
+        subMenuItemHasChidlren(subMenuItem) {
+            return this.getSubMenuItemChildren(subMenuItem).length > 0;
+        }
+
+        getSubMenuItemChildren(subMenuItem) {
+            const col = parseInt(subMenuItem.dataset.col);
+            const row = parseInt(subMenuItem.dataset.row);
+            return document.querySelectorAll(`[data-parent-row="${row}"][data-parent-col="${col}"]`);
+        }
+
+        hideSubMenuItemChildren(subMenuItem) {
+            if (!this.subMenuItemHasChidlren(subMenuItem)) return;
+
+            const subMenuSpan = subMenuItem.querySelector('span');
+            subMenuSpan.classList.add('up');
+            subMenuSpan.classList.remove('down');
+            subMenuSpan.innerHTML = '+';
+
+            this.getSubMenuItemChildren(subMenuItem).forEach((childItem) => {
+                childItem.classList.add('hidden');
+            });
+        }
+
+        showSubMenuItemChildren(subMenuItem) {
+            if (!this.subMenuItemHasChidlren(subMenuItem)) return;
+
+            const subMenuSpan = subMenuItem.querySelector('span');
+            subMenuSpan.classList.add('down');
+            subMenuSpan.classList.remove('up');
+            subMenuSpan.innerHTML = '-';
+
+            this.getSubMenuItemChildren(subMenuItem).forEach((childItem) => {
+                childItem.classList.remove('hidden');
+            });
+        }
+
         onSubMenuClick() {
             document.querySelectorAll('.subMenuItem').forEach((subMenuItem) => {
-                const col = parseInt(subMenuItem.dataset.col);
-                const row = parseInt(subMenuItem.dataset.row);
-                const childItems = document.querySelectorAll(`[data-parent-row="${row}"][data-parent-col="${col}"]`);
+                if (!this.subMenuItemHasChidlren(subMenuItem)) return;
 
-                if (childItems.length > 0) {
-                    subMenuItem.innerHTML += '<span class="up">+</span>';
+                subMenuItem.innerHTML += '<span class="up">+</span>';
+                subMenuItem.addEventListener('click', () => {
+                    if (this.isSunMenuOpen(subMenuItem))
+                        this.hideSubMenuItemChildren(subMenuItem);
+                    else
+                        this.showSubMenuItemChildren(subMenuItem);;
+                });
 
-                    subMenuItem.addEventListener('click', () => {
-                        const subMenuSpan = subMenuItem.querySelector('span');
-                        const openSunMenu = subMenuSpan.classList.contains('up');
-
-                        childItems.forEach((childItem) => {
-                            if (openSunMenu) childItem.classList.remove('hidden');
-                            else childItem.classList.add('hidden');
-                        });
-
-                        if (openSunMenu) {
-                            subMenuSpan.classList.add('down');
-                            subMenuSpan.classList.remove('up');
-                            subMenuSpan.innerHTML = '-';
-                        } else {
-                            subMenuSpan.classList.add('up');
-                            subMenuSpan.classList.remove('down');
-                            subMenuSpan.innerHTML = '+';
-                        }
-                    });
-                }
             });
         }
     }
