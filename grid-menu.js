@@ -2,8 +2,8 @@ GridMenu = function() {
     class GridMenu {
         constructor() {
             this.loadRobotoFont();
-            // const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@latest/grid-menu.min.css';
-            const href = 'grid-menu.css';
+            const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@latest/grid-menu.min.css';
+            // const href = 'grid-menu.css';
             this.loadCss(href);
         }
 
@@ -83,13 +83,10 @@ GridMenu = function() {
                     firstRow.style.borderTop = '1px solid black';
                 }
 
-
-                // border left for each row?
                 const subMenuRowCount = document.querySelectorAll(`[data-col='${parentCol}'].subMenuItem`).length;
                 for (let j = 0; j < maxRow; j++) {
                     const actualRow = parseInt(parentRow) + j;
                     if (actualRow > subMenuRowCount) {
-                        //add border left
                         const currentRow = document.querySelector(`[data-row='${++j}'][data-parent-row='${parentRow}'][data-parent-col='${parentCol}'].childMenuItem`);
                         currentRow.style.borderLeft = '1px solid black';
                         currentRow.style.marginLeft = '-1px';
@@ -172,30 +169,41 @@ GridMenu = function() {
                         });
                         menu.dataset.show = 'true';
                     }
-
                 });
             });
-
         }
 
         onSubMenuClick() {
             document.querySelectorAll('.subMenuItem').forEach((subMenuItem) => {
-                subMenuItem.addEventListener('click', () => {
-                    const col = parseInt(subMenuItem.dataset.col);
-                    const row = parseInt(subMenuItem.dataset.row);
-                    const childItems = document.querySelectorAll(`[data-parent-row="${row}"][data-parent-col="${col}"]`);
+                const col = parseInt(subMenuItem.dataset.col);
+                const row = parseInt(subMenuItem.dataset.row);
+                const childItems = document.querySelectorAll(`[data-parent-row="${row}"][data-parent-col="${col}"]`);
 
-                    childItems.forEach((childItem) => {
-                        if (childItem.classList.contains('hidden')) {
-                            childItem.classList.remove('hidden');
+                if (childItems.length > 0) {
+                    subMenuItem.innerHTML += '<span class="up">+</span>';
+
+                    subMenuItem.addEventListener('click', () => {
+                        const subMenuSpan = subMenuItem.querySelector('span');
+                        const openSunMenu = subMenuSpan.classList.contains('up');
+
+                        childItems.forEach((childItem) => {
+                            if (openSunMenu) childItem.classList.remove('hidden');
+                            else childItem.classList.add('hidden');
+                        });
+
+                        if (openSunMenu) {
+                            subMenuSpan.classList.add('down');
+                            subMenuSpan.classList.remove('up');
+                            subMenuSpan.innerHTML = '-';
                         } else {
-                            childItem.classList.add('hidden');
+                            subMenuSpan.classList.add('up');
+                            subMenuSpan.classList.remove('down');
+                            subMenuSpan.innerHTML = '+';
                         }
                     });
-                });
+                }
             });
         }
-
     }
     return new GridMenu();
 }()
