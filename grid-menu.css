@@ -28,7 +28,7 @@
     z-index: 10;
     position: fixed;
     display: grid;
-    grid-template-rows: repeat(20, calc(var(--header-vertical-padding)*2 + var(--header-font-size) - var(--header-border-size))) !important;
+    grid-template-rows: repeat(1, calc(var(--header-vertical-padding)*2 + var(--header-font-size) - var(--header-border-size))) !important;
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: var(--header-font-size);
 }
@@ -38,8 +38,10 @@
     padding-top: var(--header-vertical-padding);
 }
 
-.menu:nth-of-type(1),
-.subMenuItem[data-col='1'] {
+.menu:nth-of-type(1)
+/*, .subMenuItem[data-col='1'] */
+
+{
     margin-left: 20px;
 }
 
@@ -47,6 +49,7 @@
 .menu:hover {
     color: white !important;
     background-color: black !important;
+    cursor: pointer !important;
 }
 
 [class*="menu"],
