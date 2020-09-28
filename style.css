@@ -1,0 +1,33 @@
+:root {
+    --footer-height: 14px;
+    --footer-vertical-padding: 4px;
+    --footer-border-size: 1px;
+}
+
+#app {
+    z-index: 1;
+    height: calc(100vh - 27px);
+    top: 27px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto calc(2 * var(--footer-vertical-padding) + var(--footer-height));
+    grid-template-areas: 'main''footer';
+}
+
+#app>main {
+    grid-area: main;
+    overflow: auto;
+    padding: 0px 5px 10px 5px;
+    background-color: rgb(186, 222, 245);
+}
+
+#app>footer {
+    grid-area: footer;
+    color: black;
+    background-color: white;
+    padding: var(--footer-vertical-padding) 5px;
+    height: caLc(var(--footer-height) - var(--footer-border-size));
+    border-top: var(--footer-border-size) solid black;
+    font-family: Roboto;
+    font-size: 12px;
+}

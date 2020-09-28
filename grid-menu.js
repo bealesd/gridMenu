@@ -2,8 +2,8 @@ GridMenu = function() {
     class GridMenu {
         constructor() {
             this.loadRobotoFont();
-            const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@latest/grid-menu.min.css';
-            // const href = 'grid-menu.css';
+            // const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@latest/grid-menu.min.css';
+            const href = 'grid-menu.css';
             this.loadCss(href);
         }
 
@@ -30,7 +30,9 @@ GridMenu = function() {
         }
 
         setup() {
-            this.createHeaderBackground();
+            this.moveBodyContent();
+
+            this.moveMenuToContainer();
             this.positionMenuItems();
 
             this.moveMenuChildrenToContainers();
@@ -44,6 +46,61 @@ GridMenu = function() {
 
             this.onMenuClick();
             this.onSubMenuClick();
+        }
+
+        moveBodyContent() {
+            const body = document.querySelector('body');
+
+            const bodyContent = document.createElement('div');
+            bodyContent.id = 'bodyContent';
+
+            const rowHeight = this.getPixelCssProp('header-vertical-padding') * 2 +
+                this.getPixelCssProp('header-font-size') +
+                this.getPixelCssProp('header-border-size');
+
+            bodyContent.style.marginTop = `${rowHeight}px`;
+            bodyContent.style.height = `${this.vh(100) -rowHeight}px)`;
+            bodyContent.style.top = `${rowHeight}px`;
+
+            [...body.children].forEach((child, index) => {
+                this.insertContent(bodyContent, index, child);
+
+            });
+
+            this.insertContent(body, 0, bodyContent);
+        }
+
+        moveMenuToContainer() {
+            const rowHeight = this.getPixelCssProp('header-vertical-padding') * 2 +
+                this.getPixelCssProp('header-font-size') +
+                this.getPixelCssProp('header-border-size');
+
+            const menuItems = document.querySelectorAll(`.menu`);
+
+            const div = document.createElement('div');
+            div.id = 'menuContainer';
+            div.style.display = 'grid';
+            div.style.gridTemplateRows = `repeat(1, ${rowHeight}px)`;
+            div.style.width = '100%';
+            div.style.gridTemplateColumns = 'repeat(3, min-content) auto';
+
+            div.style.left = `${this.getCssProp('menu-margin-left')}`;
+            div.style.zIndex = 12;
+            div.style.position = 'fixed';
+            div.style.top = '0px';
+            div.style.borderBottom = 'solid 1px black';
+            div.style.fontFamily = '-apple-system, BlinkMacSystemFont, sans-serif';
+            div.style.fontSize = this.getPixelCssProp('header-font-size');
+
+            menuItems.forEach((menu) => {
+                const col = parseInt(menu.dataset.col);
+                menu.style.gridRow = `1 / span 1`;
+                menu.style.gridColumn = `${col} / span 1`;
+                this.insertContent(div, col - 1, menu);
+            });
+
+            let body = document.querySelector('body');
+            this.insertContent(body, 0, div);
         }
 
         addSubMenuBorders() {
@@ -100,14 +157,6 @@ GridMenu = function() {
                     }
                 }
             }
-        }
-
-        createHeaderBackground() {
-            const headerBackground = document.createElement("div");
-            headerBackground.id = 'headerBackground';
-
-            const app = document.querySelector('#app');
-            app.insertBefore(headerBackground, app.children[0]);
         }
 
         positionMenuItems() {
@@ -228,8 +277,7 @@ GridMenu = function() {
         createSubmMenuExpanders() {
             document.querySelectorAll('.subMenuItem').forEach((subMenuItem) => {
                 if (!this.subMenuItemHasChidlren(subMenuItem)) return;
-                this.insertContent(subMenuItem, 0, '', '<span class="up">+</span>');
-                // subMenuItem.innerHTML += '<span class="up">+</span>';
+                this.insertContent(subMenuItem, 0, '<span class="up">+</span>');
             });
         }
 
@@ -240,7 +288,6 @@ GridMenu = function() {
                     if (this.isSunMenuOpen(subMenuItem)) this.hideSubMenuItemChildren(subMenuItem);
                     else this.showSubMenuItemChildren(subMenuItem);;
                 });
-
             });
         }
 
@@ -250,7 +297,7 @@ GridMenu = function() {
 
         moveMenuChildrenToContainers() {
             const menuHeight = document.querySelector('.menu').offsetHeight;
-            const app = document.querySelector('#app');
+            const body = document.querySelector('body');
 
             const menuColumnsCount = document.querySelectorAll('.menu').length;
             for (let i = 1; i <= menuColumnsCount; i++) {
@@ -269,7 +316,6 @@ GridMenu = function() {
 
                 div.dataset.col = i;
                 div.className = 'subMenu';
-                div.style.marginTop = `${menuHeight}px`;
                 div.style.display = 'grid';
                 div.style.gridTemplateRows = `repeat(20, ${rowheight}px)`;
                 div.style.left = `${menuItem.offsetLeft}px`;
@@ -278,11 +324,13 @@ GridMenu = function() {
                 div.style.fontFamily = '-apple-system, BlinkMacSystemFont, sans-serif';
                 div.style.fontSize = this.getPixelCssProp('header-font-size');
 
-                this.insertContent(app, i - 1, 'before', div);
+
+                // this.insertContent(app, i - 1, div);
+                this.insertContent(body, i - 1, div);
             }
         }
 
-        insertContent(parentElement, position, beforeOrAfter, htmlElement) {
+        insertContent(parentElement, position, htmlElement) {
             if (!this.isHtmlELement(htmlElement) && !this.isString(htmlElement))
                 return;
 
@@ -296,10 +344,11 @@ GridMenu = function() {
             const children = parentElement.children;
             if (children.length === 0)
                 parentElement.appendChild(htmlElement);
-            else if (beforeOrAfter.toLocaleLowerCase() === 'after')
-                parentElement.children[position].insertAdjacentElement('afterEnd', htmlElement);
-            else
-                parentElement.children[position].insertAdjacentElement('beforeBegin', htmlElement);
+            else if (position === 0) {
+                parentElement.children[0].insertAdjacentElement('beforeBegin', htmlElement);
+            } else {
+                parentElement.children[position - 1].insertAdjacentElement('afterEnd', htmlElement);
+            }
         }
 
         promoteChildren(htmlElement) {
@@ -314,7 +363,8 @@ GridMenu = function() {
 
         isString = (value) => Object.prototype.toString.call(value) === '[object String]';
 
-
+        vh = (viewHeight) => viewHeight * (Math.max(document.documentElement.clientHeight, window.innerHeight || 0)) / 100;
+        vw = (viewWidth) => viewWidth * (Math.max(document.documentElement.clientWidth, window.innerWidth || 0)) / 100;
     }
     return new GridMenu();
 }()
