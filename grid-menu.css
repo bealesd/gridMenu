@@ -21,32 +21,32 @@
     font-size: var(--header-font-size);
 }
 
-.menu {
+.gm-menu {
     padding-bottom: var(--header-vertical-padding);
     padding-top: var(--header-vertical-padding);
 }
 
-.menu:nth-of-type(1) {
+.gm-menu:nth-of-type(1) {
     margin-left: 20px;
 }
 
-[class*="MenuItem"]:hover,
-.menu:hover {
+[class*="menu-item"]:hover,
+.gm-menu:hover {
     color: white !important;
     background-color: black !important;
     cursor: pointer !important;
 }
 
 [class*="menu"],
-[class*="subMenuItem"],
-[class*="childMenuItem"] {
+[class*="gm-sub-menu-item"],
+[class*="gm-child-menu-item"] {
     text-align: left;
     padding-left: 10px;
     padding-right: 10px;
 }
 
-.subMenuItem,
-.childMenuItem {
+.gm-sub-menu-item,
+.gm-child-menu-item {
     background-color: white;
     color: black;
     border-right: solid black 1px;
@@ -54,14 +54,13 @@
     padding-top: var(--header-vertical-padding);
 }
 
-.subMenuItem {
+.gm-sub-menu-item {
     border-left: solid black 1px;
 }
 
 .subMenu {
     display: grid;
     grid-template-rows: repeat(20, var(--heading-size));
-    /* left : ${menuItem.offsetLeft}px; */
     z-index: -1;
     position: fixed;
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
