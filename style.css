@@ -6,8 +6,7 @@
 
 #app {
     z-index: 1;
-    height: calc(100vh - 27px);
-    top: 27px;
+    height: calc(100%);
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: auto calc(2 * var(--footer-vertical-padding) + var(--footer-height));
