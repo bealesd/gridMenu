@@ -1,5 +1,7 @@
 GridMenu = function() {
     class GridMenu {
+        syntaxEnum = { 'declarative': 0, 1: 'imperative' };
+        syntaxType;
         constructor() {
             // const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@latest/grid-menu.min.css';
             const href = 'grid-menu.css';
@@ -27,8 +29,10 @@ GridMenu = function() {
         }
 
         start() {
+            this.getSyntax();
 
-            this.transformMenu();
+            if (this.syntaxType === this.syntaxEnum.declarative)
+                this.transformMenu();
 
             this.moveBodyContent();
 
@@ -48,6 +52,8 @@ GridMenu = function() {
             this.onMenuClick();
             this.onSubMenuClick();
         }
+
+        getSyntax = () => document.querySelectorAll('.gm-declarative').length > 0 ? this.syntaxType = this.syntaxEnum.declarative : this.syntaxEnum.imperative;
 
         transformMenu() {
             const menuItems = this.getMenuItems();
@@ -115,7 +121,7 @@ GridMenu = function() {
 
         getMenuItems = () => {
             const menuItems = [];
-            [...document.querySelector('.gm-container').children].forEach((menu, col) => {
+            [...document.querySelector('.gm-declarative').children].forEach((menu, col) => {
                 menuItems.push({
                     'html': menu,
                     'col': col + 1
@@ -222,7 +228,7 @@ GridMenu = function() {
         }
 
         positionSubMenuItems() {
-            document.querySelectorAll(`.gm-sub-menu`).forEach((subMenu) => {
+            document.querySelectorAll(`.subMenu`).forEach((subMenu) => {
                 subMenu.querySelectorAll(`.gm-sub-menu-item`).forEach((subMenuItem) => {
                     const row = parseInt(subMenuItem.dataset.row);
                     subMenuItem.style.gridRow = `${row} / span 1`;
@@ -243,7 +249,7 @@ GridMenu = function() {
         }
 
         positionChildMenuItems() {
-            document.querySelectorAll(`.gm-sub-menu`).forEach((subMenu) => {
+            document.querySelectorAll(`.subMenu`).forEach((subMenu) => {
                 subMenu.querySelectorAll(`.gm-child-menu-item`).forEach((childMenuItem) => {
                     const subRow = parseInt(childMenuItem.dataset.row);
                     const parentRow = parseInt(childMenuItem.dataset.parentRow);
@@ -264,10 +270,10 @@ GridMenu = function() {
                     const menuShown = menu.dataset.show === 'true';
                     const col = parseInt(menu.dataset.col);
 
-                    const subMenuItem = document.querySelector(`.gm-sub-menu[data-col="${col}"]`);
+                    const subMenuItem = document.querySelector(`.subMenu[data-col="${col}"]`);
 
                     // move all subMenus to the rear
-                    document.querySelectorAll(`.gm-sub-menu`).forEach((subMenu) => {
+                    document.querySelectorAll(`.subMenu`).forEach((subMenu) => {
                         subMenu.style.zIndex = -1;
                     });
 
@@ -374,7 +380,7 @@ GridMenu = function() {
 
                 const div = document.createElement('div');
                 div.dataset.col = i;
-                div.className = 'gm-sub-menu';
+                div.className = 'subMenu';
                 div.style.left = `${menuItem.offsetLeft}px`;
 
                 childItemsForMenuItem.forEach(childItem => div.appendChild(childItem));
