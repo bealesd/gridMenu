@@ -1,5 +1,8 @@
 GridMenu = function () {
     class GridMenu {
+        UP_ARROW = '&#x25BA;';
+        DOWN_ARROW = '&#9660;';
+
         constructor() {
             this.menuItems = [];
             this.subMenuItems = [];
@@ -146,12 +149,7 @@ GridMenu = function () {
 
         getSubMenuContainer = (menuCol) => this.subMenuContainers.find(container => container.menuCol === menuCol);
 
-        getSubMenuItemChildren(subMenuItem) {
-            const menuCol = parseInt(subMenuItem.menuCol);
-            const row = parseInt(subMenuItem.row);
-
-            return this.childMenuItems.filter(x => x.menuCol===menuCol && x.subMenuRow===row );
-        }
+        getSubMenuItemChildren = (subMenuItem) => this.childMenuItems.filter(x => x.menuCol === subMenuItem.menuCol && x.subMenuRow === subMenuItem.row);
 
         getIntialMenuItemsDom = () => {
             if (document.querySelector('.gm-container') === null) return [];
@@ -397,9 +395,7 @@ GridMenu = function () {
             const subMenuSpan = subMenuItem.html.querySelector('span');
             subMenuSpan.classList.add('up');
             subMenuSpan.classList.remove('down');
-            subMenuSpan.innerHTML = '&#43;';
-            subMenuSpan.innerHTML = '&#10148';
-            subMenuSpan.innerHTML = '&#x25BA;';
+            subMenuSpan.innerHTML = this.UP_ARROW;
 
             this.getSubMenuItemChildren(subMenuItem).forEach(childItem => childItem.html.classList.add('gm-hidden'));
         }
@@ -413,7 +409,8 @@ GridMenu = function () {
             const subMenuSpan = subMenuItem.html.querySelector('span');
             subMenuSpan.classList.add('down');
             subMenuSpan.classList.remove('up');
-            subMenuSpan.innerHTML = '&#9660;';
+
+            subMenuSpan.innerHTML = this.DOWN_ARROW;
             subMenuSpan.id = 'gm-span';
 
             this.getSubMenuItemChildren(subMenuItem).forEach((childItem) => childItem.html.classList.remove('gm-hidden'));
@@ -421,7 +418,7 @@ GridMenu = function () {
 
         createSubmMenuExpanders = () =>
             this.subMenuItems.forEach(subMenuItem => this.subMenuItemHasChidlren(subMenuItem) &&
-                this.insertContent(subMenuItem.html, 1, '<span id="gm-span" class="up"></span>'))
+                this.insertContent(subMenuItem.html, 1, `<span id="gm-span" class="up">${this.UP_ARROW}</span>`))
 
         onSubMenuClick() {
             this.subMenuItems.forEach((subMenuItem) => {
