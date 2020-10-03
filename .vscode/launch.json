@@ -1,0 +1,11 @@
+{
+    "configurations": [
+    {
+        "name": "Launch Chrome",
+        "request": "launch",
+        "type": "pwa-chrome",
+        "url": "file:///C:/Git/gridMenu/grid_menu.html",
+        "webRoot": "${workspaceFolder}"
+    }
+    ]
+}
