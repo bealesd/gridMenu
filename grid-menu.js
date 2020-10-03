@@ -102,7 +102,7 @@ GridMenu = function () {
 
         getSubMenuContainer = (menuCol) => this.subMenuContainers.find(container => container.menuCol === menuCol);
 
-        getSubMenuItemChildren = (subMenuItem) => this.childMenuItems.filter(x => x.menuCol === subMenuItem.menuCol && x.subMenuRow === subMenuItem.row);
+        getSubMenuItemChildren = (subMenuItem) => this.childMenuItems.filter(x => x.menuCol === subMenuItem.menuCol && x.subMenuRow === subMenuItem.subMenuRow);
 
         getMenuItemsDom = () => {
             const menuItems = [];
@@ -121,7 +121,7 @@ GridMenu = function () {
                 subMenuItems.push({
                     'html': subMenuItem,
                     'menuCol': parseInt(subMenuItem.dataset.menuCol),
-                    'row': parseInt(subMenuItem.dataset.row)
+                    'subMenuRow': parseInt(subMenuItem.dataset.subMenuRow)
                 });
             });
             return subMenuItems;
@@ -167,11 +167,11 @@ GridMenu = function () {
         getInitialSubMenuItemsDom = () => {
             const subMenuItems = [];
             this.getIntialMenuItemsDom().forEach((menuItem) => {
-                [...menuItem.html.children].forEach((subMenuItem, row) => {
+                [...menuItem.html.children].forEach((subMenuItem, subMenuRow) => {
                     subMenuItems.push({
                         'menuCol': menuItem.menuCol,
                         'html': subMenuItem,
-                        'row': row + 1
+                        'subMenuRow': subMenuRow + 1
                     });
                 });
             });
@@ -186,7 +186,7 @@ GridMenu = function () {
                 [...subMenuItem.html.children].forEach((childMenuItem, childMenuRow) => {
                     childMenuItems.push({
                         'childMenuRow': childMenuRow + 1,
-                        'subMenuRow': subMenuItem.row,
+                        'subMenuRow': subMenuItem.subMenuRow,
                         'menuCol': subMenuItem.menuCol,
                         'html': childMenuItem
                     });
@@ -210,7 +210,7 @@ GridMenu = function () {
                 const div = document.createElement('div');
                 div.classList.add('gm-sub-menu-item');
                 div.dataset.menuCol = subMenuItem.menuCol;
-                div.dataset.row = subMenuItem.row;
+                div.dataset.subMenuRow = subMenuItem.subMenuRow;
                 if (subMenuItem.html.id) div.id = subMenuItem.html.id;
                 div.innerHTML = subMenuItem.html.dataset.value;
                 this.insertContent(this.body, 0, div);
@@ -324,7 +324,7 @@ GridMenu = function () {
 
         positionSubMenuItems() {
             this.subMenuItems.forEach((subMenuItem) => {
-                subMenuItem.html.style.gridRow = `${subMenuItem.row} / span 1`;
+                subMenuItem.html.style.gridRow = `${subMenuItem.subMenuRow} / span 1`;
                 subMenuItem.html.style.gridColumn = `1 / span 1`;
                 subMenuItem.html.classList.add('gm-hidden');
                 subMenuItem.html.style.display = 'grid';
