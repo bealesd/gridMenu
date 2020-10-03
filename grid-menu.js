@@ -88,7 +88,7 @@ GridMenu = function () {
             else
                 delegate = subMenuItem => subMenuItem.menuCol === args.menuCol && subMenuItem.subMenuRow === args.subMenuRow;
 
-            return this.subMenuItems.find(delegate);
+            return this.subMenuItems.filter(delegate);
         }
 
         getMenuItem(args) {
@@ -254,7 +254,7 @@ GridMenu = function () {
         addSubMenuBorders() {
             const subMenuGroups = this.countSubMenuMenuItemsInGroup();
             subMenuGroups.forEach((subMenuGroup) => {
-                const lastRow = this.getSubMenuItems({ 'menuCol': subMenuGroup.menuCol, 'subMenuCol': subMenuGroup.rowCount });
+                const lastRow = this.getSubMenuItems({ 'menuCol': subMenuGroup.menuCol, 'subMenuCol': subMenuGroup.rowCount })[0];
                 lastRow.html.style.borderBottom = this.menuBorder;
             });
         }
@@ -327,7 +327,6 @@ GridMenu = function () {
             this.subMenuItems.forEach((subMenuItem) => {
                 subMenuItem.html.style.gridRow = `${subMenuItem.subMenuRow} / span 1`;
                 subMenuItem.html.style.gridColumn = `1 / span 1`;
-                subMenuItem.html.classList.add('gm-hidden');
                 subMenuItem.html.style.display = 'grid';
                 subMenuItem.html.style.gridTemplateColumns = 'auto 10px';
 
@@ -353,42 +352,39 @@ GridMenu = function () {
         onMenuClick() {
             this.menuItems.forEach((menu) => {
                 menu.html.addEventListener('click', () => {
-                    const menuShown = menu.showChildren === true;
+                    const showMenu = !menu.showChildren;
 
-                    // move all subMenus to the rear
-                    this.subMenuItems.forEach(subMenu => subMenu.html.style.zIndex = -1);
+                    this.hideSubMenus();
+                    this.hideChildMenuItems();
 
-                    const subMenuContainer = this.getSubMenuContainer(menu.menuCol);
-                    // move subMenu to front
-                    subMenuContainer.html.style.zIndex = 12;
-
-                    // clear all menu items
-                    this.subMenuItems.forEach((subMenuItem) => {
-                        subMenuItem.html.classList.add('gm-hidden');
-                        this.hideSubMenuItemChildren(subMenuItem);
-                    });
-
-                    const menuItems = this.getSubAndChildMenuItems(menu.menuCol);
-                    // turn off all menus
                     this.menuItems.forEach(menu => menu.showChildren = false);
 
-                    if (menuShown) {
+                    if (!showMenu) {
+                        this.hideSubMenu(menu.menuCol);
                         menu.showChildren = false;
-                        subMenuContainer.html.style.zIndex = -1;
-                    } else if (!menuShown) {
-                        menuItems.forEach((menuItem) => {
-                            if (menuItem.html.classList.contains('gm-sub-menu-item'))
-                                menuItem.html.classList.remove('gm-hidden');
-                        });
+                    } else if (showMenu) {
+                        this.showSubMenu(menu.menuCol);
                         menu.showChildren = true;
                     }
                 });
             });
         }
 
+        hideSubMenus = () => this.subMenuContainers.forEach(container => container.html.style.zIndex = -1);
+
+        hideSubMenu = (menuCol) => this.getSubMenuContainer(menuCol).html.style.zIndex = -1;
+
+        showSubMenu = (menuCol) => this.getSubMenuContainer(menuCol).html.style.zIndex = 12;
+
         isSunMenuOpen = (subMenuItem) => subMenuItem.html.querySelector('span').classList.contains('down');
 
         subMenuItemHasChidlren = (subMenuItem) => this.getSubMenuItemChildren(subMenuItem).length > 0;
+
+        hideChildMenuItems() {
+            this.subMenuItems.forEach((subMenuItem) => {
+                this.hideSubMenuItemChildren(subMenuItem);
+            });
+        }
 
         hideSubMenuItemChildren(subMenuItem) {
             if (!this.subMenuItemHasChidlren(subMenuItem)) return;
@@ -402,7 +398,6 @@ GridMenu = function () {
         }
 
         hideOtherSubMenuItemChildren = (subMenuItem) => this.subMenuItems.forEach(item => (item.html !== subMenuItem.html) && this.hideSubMenuItemChildren(item));
-
 
         showSubMenuItemChildren(subMenuItem) {
             if (!this.subMenuItemHasChidlren(subMenuItem)) return;
