@@ -73,7 +73,7 @@ GridMenu = function () {
             else if (!Object.keys(args).includes('childRow'))
                 delegate = child => child.menuCol === args.menuCol && child.subMenuRow === args.subMenuRow;
             else
-                delegate = child => child.menuCol === args.menuCol && child.subMenuRow === args.subMenuRow && child.row === args.childRow;
+                delegate = child => child.menuCol === args.menuCol && child.subMenuRow === args.subMenuRow && child.childMenuRow === args.childRow;
 
             return this.childMenuItems.find(delegate);
         }
@@ -99,6 +99,10 @@ GridMenu = function () {
         }
 
         getSubAndChildMenuItems = (menuCol) => [...this.subMenuItems.filter(subItem => subItem.menuCol === menuCol), ...this.childMenuItems.filter(childItem => childItem.menuCol === menuCol)];
+
+        getSubMenuContainer = (menuCol) => this.subMenuContainers.find(container => container.menuCol === menuCol);
+
+        getSubMenuItemChildren = (subMenuItem) => this.childMenuItems.filter(x => x.menuCol === subMenuItem.menuCol && x.subMenuRow === subMenuItem.row);
 
         getMenuItemsDom = () => {
             const menuItems = [];
@@ -127,7 +131,7 @@ GridMenu = function () {
             const childMenuItems = [];
             document.querySelectorAll('.gm-child-menu-item').forEach((childMenuItem) => {
                 childMenuItems.push({
-                    'row': parseInt(childMenuItem.dataset.row),
+                    'childMenuRow': parseInt(childMenuItem.dataset.childMenuRow),
                     'subMenuRow': parseInt(childMenuItem.dataset.subMenuRow),
                     'menuCol': parseInt(childMenuItem.dataset.menuCol),
                     'html': childMenuItem
@@ -146,10 +150,6 @@ GridMenu = function () {
             });
             return subMenuContainers;
         }
-
-        getSubMenuContainer = (menuCol) => this.subMenuContainers.find(container => container.menuCol === menuCol);
-
-        getSubMenuItemChildren = (subMenuItem) => this.childMenuItems.filter(x => x.menuCol === subMenuItem.menuCol && x.subMenuRow === subMenuItem.row);
 
         getIntialMenuItemsDom = () => {
             if (document.querySelector('.gm-container') === null) return [];
@@ -183,9 +183,9 @@ GridMenu = function () {
             const subMenuItems = this.getInitialSubMenuItemsDom();
 
             subMenuItems.forEach((subMenuItem) => {
-                [...subMenuItem.html.children].forEach((childMenuItem, row) => {
+                [...subMenuItem.html.children].forEach((childMenuItem, childMenuRow) => {
                     childMenuItems.push({
-                        'row': row + 1,
+                        'childMenuRow': childMenuRow + 1,
                         'subMenuRow': subMenuItem.row,
                         'menuCol': subMenuItem.menuCol,
                         'html': childMenuItem
@@ -221,7 +221,7 @@ GridMenu = function () {
                 div.classList.add('gm-child-menu-item');
                 div.dataset.subMenuRow = childMenuItem.subMenuRow;
                 div.dataset.menuCol = childMenuItem.menuCol;
-                div.dataset.row = childMenuItem.row;
+                div.dataset.childMenuRow = childMenuItem.childMenuRow;
                 if (childMenuItem.html.id) div.id = childMenuItem.html.id;
                 div.innerHTML = childMenuItem.html.dataset.value;
                 this.insertContent(this.body, 0, div);
@@ -342,7 +342,7 @@ GridMenu = function () {
 
         positionChildMenuItems() {
             this.childMenuItems.forEach((childMenuItem) => {
-                const row = childMenuItem.subMenuRow + childMenuItem.row - 1;
+                const row = childMenuItem.subMenuRow + childMenuItem.childMenuRow - 1;
                 childMenuItem.html.style.gridRow = `${row} / span 1`;
                 childMenuItem.html.style.gridColumn = `2 / span 1`;
                 childMenuItem.html.classList.add('gm-hidden');
