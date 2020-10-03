@@ -109,7 +109,8 @@ GridMenu = function () {
             document.querySelectorAll('.gm-menu').forEach((menu) => {
                 menuItems.push({
                     'html': menu,
-                    'menuCol': parseInt(menu.dataset.menuCol)
+                    'menuCol': parseInt(menu.dataset.menuCol),
+                    'showChildren': false
                 });
             });
             return menuItems;
@@ -352,7 +353,7 @@ GridMenu = function () {
         onMenuClick() {
             this.menuItems.forEach((menu) => {
                 menu.html.addEventListener('click', () => {
-                    const menuShown = menu.html.dataset.show === 'true';
+                    const menuShown = menu.showChildren === true;
 
                     // move all subMenus to the rear
                     this.subMenuItems.forEach(subMenu => subMenu.html.style.zIndex = -1);
@@ -369,17 +370,17 @@ GridMenu = function () {
 
                     const menuItems = this.getSubAndChildMenuItems(menu.menuCol);
                     // turn off all menus
-                    this.menuItems.forEach(menu => menu.html.dataset.show = 'false');
+                    this.menuItems.forEach(menu => menu.showChildren = false);
 
                     if (menuShown) {
-                        menu.html.dataset.show = 'false';
+                        menu.showChildren = false;
                         subMenuContainer.html.style.zIndex = -1;
                     } else if (!menuShown) {
                         menuItems.forEach((menuItem) => {
                             if (menuItem.html.classList.contains('gm-sub-menu-item'))
                                 menuItem.html.classList.remove('gm-hidden');
                         });
-                        menu.html.dataset.show = 'true';
+                        menu.showChildren = true;
                     }
                 });
             });
