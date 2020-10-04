@@ -433,13 +433,13 @@ GridMenu = function () {
         hideSubMenu(menuCol){
 			const container = this.getSubMenuContainer(menuCol);
 			container.html.style.zIndex = -1;
-			container.classList.add('gm-hidden');
+			container.html.classList.add('gm-hidden');
 		}
 
 		showSubMenu(menuCol) {
 			const container = this.getSubMenuContainer(menuCol);
 			container.html.style.zIndex = 12;
-			container.classList.remove('gm-hidden');
+			container.html.classList.remove('gm-hidden');
 		}
 
         isSunMenuOpen = (subMenuItem) => subMenuItem.html.querySelector('span').classList.contains('down');
