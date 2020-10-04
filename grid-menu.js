@@ -15,7 +15,7 @@ GridMenu = function () {
 
             // const href = 'grid-menu.css';
             // const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@latest/grid-menu.min.css';
-            const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@b32540faf76f93bd8060431860b7ccfe83e5b8c1/grid-menu.min.css';
+            const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@37930d762e8f18fcffab5444c219a744eaf2487d/grid-menu.min.css';
             
             this.loadCss(href);
 
