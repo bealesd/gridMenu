@@ -14,12 +14,14 @@ GridMenu = function () {
             this.menuBorder = '1px solid black';
 
             // const href = 'grid-menu.css';
-            // const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@latest/grid-menu.min.css';
-            const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@b4474b5eba988e8ef9581beb736d786f5350267e/grid-menu.min.css';
+            const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@latest/grid-menu.min.css';
+            // const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@b4474b5eba988e8ef9581beb736d786f5350267e/grid-menu.min.css';
             
             this.loadCss(href);
 
-            const autoLoad = document.querySelector(`[data-gm-load]`).dataset.gmLoad.toLowerCase() === 'true';
+            let autoLoad = false;
+            if(document.querySelector(`[data-gm-load]`) !== null)
+                autoLoad = document.querySelector(`[data-gm-load]`).dataset.gmLoad.toLowerCase() === 'true';
             if (autoLoad)
                 window.addEventListener("load", () => this.load());
         }
