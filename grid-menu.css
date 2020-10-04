@@ -58,7 +58,7 @@
     border-left: solid black 1px;
 }
 
-.gm-sub-menu {
+.gm-sub-menu-container {
     display: grid;
     grid-template-rows: repeat(20, var(--heading-size));
     z-index: -1;
