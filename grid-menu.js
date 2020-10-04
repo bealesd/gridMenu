@@ -1,10 +1,11 @@
-GridMenu = function() {
+GridMenu = function () {
     class GridMenu {
         UP_ARROW = '&#x25BA;';
         DOWN_ARROW = '&#9660;';
 
         constructor() {
             this.ready = false;
+            this.onReadyCallbacks = [];
 
             this.menuItems = [];
             this.subMenuItems = [];
@@ -16,11 +17,9 @@ GridMenu = function() {
             const href = 'grid-menu.css';
             this.loadCss(href);
 
-            window.addEventListener("load", () => this.initialize());
-        }
-
-        loadRobotoFont() {
-            this.loadCss("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+            const autoLoad = document.querySelector(`[data-gm-load]`).dataset.gmLoad.toLowerCase() === 'true';
+            if (autoLoad)
+                window.addEventListener("load", () => this.load());
         }
 
         loadCss(href) {
@@ -32,7 +31,9 @@ GridMenu = function() {
             document.querySelector("head").appendChild(link);
         }
 
-        initialize() {
+        registerCallback = (callback) => this.onReadyCallbacks.push(callback);
+
+        load() {
             this.body = document.querySelector('body');
 
             this.flatternMenu();
@@ -65,6 +66,7 @@ GridMenu = function() {
 
             this.onOffMenuClick();
 
+            this.onReadyCallbacks.forEach(cb => cb());
             this.ready = true;
         }
 
@@ -75,11 +77,11 @@ GridMenu = function() {
             if (!Object.keys(args).includes('menuCol'))
                 return [];
             else if (!Object.keys(args).includes('subMenuRow'))
-                delegate = child => child.menuCol === args.menuCol;
+                delegate = child => child.menuCol === parseInt(args.menuCol);
             else if (!Object.keys(args).includes('childRow'))
-                delegate = child => child.menuCol === args.menuCol && child.subMenuRow === args.subMenuRow;
+                delegate = child => child.menuCol === parseInt(args.menuCol) && child.subMenuRow === parseInt(args.subMenuRow);
             else
-                delegate = child => child.menuCol === args.menuCol && child.subMenuRow === args.subMenuRow && child.childMenuRow === args.childRow;
+                delegate = child => child.menuCol === parseInt(args.menuCol) && child.subMenuRow === parseInt(args.subMenuRow) && child.childMenuRow === parseInt(args.childRow);
 
             return this.childMenuItems.filter(delegate);
         }
@@ -90,9 +92,9 @@ GridMenu = function() {
             if (!Object.keys(args).includes('menuCol'))
                 return [];
             else if (!Object.keys(args).includes('subMenuRow'))
-                delegate = subMenuItem => subMenuItem.menuCol === args.menuCol;
+                delegate = subMenuItem => subMenuItem.menuCol === parseInt(args.menuCol);
             else
-                delegate = subMenuItem => subMenuItem.menuCol === args.menuCol && subMenuItem.subMenuRow === args.subMenuRow;
+                delegate = subMenuItem => subMenuItem.menuCol === parseInt(args.menuCol) && subMenuItem.subMenuRow === parseInt(args.subMenuRow);
 
             return this.subMenuItems.filter(delegate);
         }
@@ -141,7 +143,8 @@ GridMenu = function() {
                     'childMenuRow': parseInt(childMenuItem.dataset.childMenuRow),
                     'subMenuRow': parseInt(childMenuItem.dataset.subMenuRow),
                     'menuCol': parseInt(childMenuItem.dataset.menuCol),
-                    'html': childMenuItem
+                    'html': childMenuItem,
+                    'shown': false
                 });
             });
             return childMenuItems;
@@ -186,22 +189,22 @@ GridMenu = function() {
         }
 
         getInitialChildMenuItems = () => {
-                const childMenuItems = [];
-                const subMenuItems = this.getInitialSubMenuItemsDom();
+            const childMenuItems = [];
+            const subMenuItems = this.getInitialSubMenuItemsDom();
 
-                subMenuItems.forEach((subMenuItem) => {
-                    [...subMenuItem.html.children].forEach((childMenuItem, childMenuRow) => {
-                        childMenuItems.push({
-                            'childMenuRow': childMenuRow + 1,
-                            'subMenuRow': subMenuItem.subMenuRow,
-                            'menuCol': subMenuItem.menuCol,
-                            'html': childMenuItem
-                        });
+            subMenuItems.forEach((subMenuItem) => {
+                [...subMenuItem.html.children].forEach((childMenuItem, childMenuRow) => {
+                    childMenuItems.push({
+                        'childMenuRow': childMenuRow + 1,
+                        'subMenuRow': subMenuItem.subMenuRow,
+                        'menuCol': subMenuItem.menuCol,
+                        'html': childMenuItem
                     });
                 });
-                return childMenuItems;
-            }
-            //#region 
+            });
+            return childMenuItems;
+        }
+        //#region 
 
         flatternMenu() {
             this.getIntialMenuItemsDom().forEach((menuItem) => {
@@ -268,8 +271,8 @@ GridMenu = function() {
         countChildMenuItemsInGroup() {
             const childMenuRowCountPerGroup = [];
             this.childMenuItems.forEach((childMenuItem) => {
-                const childMenuGroup = childMenuRowCountPerGroup.find(r => r.menuCol === childMenuItem.menuCol && r.subMenuRow === childMenuItem.subMenuRow);
-                if (childMenuGroup === undefined) {
+                const childMenuGroup = childMenuRowCountPerGroup.find(r => r.menuCol === childMenuItem.menuCol && r.subMenuRow === childMenuItem.subMenuRow) ?? false;
+                if (!childMenuGroup) {
                     childMenuRowCountPerGroup.push({
                         'menuCol': childMenuItem.menuCol,
                         'subMenuRow': childMenuItem.subMenuRow,
@@ -283,8 +286,8 @@ GridMenu = function() {
         countSubMenuMenuItemsInGroup() {
             const subMenuRowCountPerGroup = [];
             this.subMenuItems.forEach((subMenuItem) => {
-                const subMenuGroup = subMenuRowCountPerGroup.find(r => r.menuCol === subMenuItem.menuCol);
-                if (subMenuGroup === undefined) {
+                const subMenuGroup = subMenuRowCountPerGroup.find(r => r.menuCol === subMenuItem.menuCol) ?? false;
+                if (!subMenuGroup) {
                     subMenuRowCountPerGroup.push({
                         'menuCol': subMenuItem.menuCol,
                         'rowCount': 1
@@ -371,9 +374,18 @@ GridMenu = function() {
         }
 
         onOffMenuClick() {
-            document.querySelector('#bodyContent').addEventListener('click', () => {
-                this.hideMenu();
-            });
+            document.querySelector('#bodyContent').addEventListener('click', () => this.hideMenu());
+
+            this.subMenuContainers.forEach((container) => {
+                container.html.addEventListener('click', (evt) => {
+                    const menuItem = evt.path.find(dom => dom.nodeName === "DIV" && (dom.classList.contains("gm-sub-menu-item") || dom.classList.contains("gm-child-menu-item"))) ?? false;
+
+                    if (!menuItem) return this.hideMenu();
+                    else if (menuItem.classList.contains("gm-sub-menu-item")) return;
+                    else if (!this.getChildMenuItems({ ...menuItem.dataset })[0].shown) return this.hideMenu();
+                    else return;
+                });
+            })
         }
 
         hideMenu() {
@@ -392,11 +404,8 @@ GridMenu = function() {
 
         subMenuItemHasChidlren = (subMenuItem) => this.getSubMenuItemChildren(subMenuItem).length > 0;
 
-        hideChildMenuItems() {
-            this.subMenuItems.forEach((subMenuItem) => {
-                this.hideSubMenuItemChildren(subMenuItem);
-            });
-        }
+        hideChildMenuItems = () => this.subMenuItems.forEach((subMenuItem) => this.hideSubMenuItemChildren(subMenuItem));
+
 
         hideSubMenuItemChildren(subMenuItem) {
             if (!this.subMenuItemHasChidlren(subMenuItem)) return;
@@ -421,7 +430,10 @@ GridMenu = function() {
             subMenuSpan.innerHTML = this.DOWN_ARROW;
             subMenuSpan.id = 'gm-span';
 
-            this.getSubMenuItemChildren(subMenuItem).forEach((childItem) => childItem.html.classList.remove('gm-hidden'));
+            this.getSubMenuItemChildren(subMenuItem).forEach((childItem) => {
+                childItem.html.classList.remove('gm-hidden');
+                childItem.shown = true;
+            });
         }
 
         createSubmMenuExpanders = () =>

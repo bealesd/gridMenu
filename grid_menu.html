@@ -10,7 +10,7 @@
 <head>
     <!-- <script src="https://cdn.jsdelivr.net/gh/bealesd/GridMenu@latest/grid-menu.min.js"></script> -->
     <!-- <script src="https://cdn.jsdelivr.net/gh/bealesd/GridMenu@1bbd80a1528091a56e4bc2130cb5930283ad1e4d/grid-menu.js"></script> -->
-    <script src="grid-menu.js"></script>
+    <script src="grid-menu.js" data-gm-load="falsee"></script>
     <link href="style.css" rel="stylesheet">
 </head>
 
@@ -34,7 +34,7 @@
             <div data-value="Close">
                 <div data-value="One"> </div>
                 <div data-value="Two"> </div>
-                <div data-value="All" id="close-click2"> </div>
+                <div data-value="All" id="close-all-click"> </div>
             </div>
         </div>
     </div>
@@ -44,23 +44,46 @@
         <main>
             <h1> Lorem Ipsum passage</h1>
             <p>
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. "
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+                ex ea commodo consequat. Duis aute irure dolor
+                in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+                cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. "
             </p>
             <h1> Lorem Ipsum passage</h1>
             <p>
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. "
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+                ex ea commodo consequat. Duis aute irure dolor
+                in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+                cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. "
             </p>
             <h1> Lorem Ipsum passage</h1>
             <p>
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. "
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+                ex ea commodo consequat. Duis aute irure dolor
+                in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+                cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. "
             </p>
         </main>
         <footer>Copyright David Beales</footer>
     </div>
 
 </body>
+
+<script>
+    window.addEventListener("load", () => {
+        const closeClickCb = () => {
+            document.querySelector('#close-click').addEventListener('click', () => {
+                alert('hello from "#close-click".');
+            })
+        }
+
+        GridMenu.registerCallback(closeClickCb);
+        GridMenu.load();
+    });
+
+</script>
 
 </html>
