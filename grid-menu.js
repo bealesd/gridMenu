@@ -38,6 +38,8 @@ GridMenu = function () {
                 try {
                     this.body = document.querySelector('body');
 
+                    this.enableRollback();
+
                     this.flatternMenu();
 
                     this.menuItems = this.getMenuItemsDom();
@@ -213,14 +215,21 @@ GridMenu = function () {
             return childMenuItems;
         }
         //#region 
+        enableRollback(){
+            this.rollbackHtml = document.querySelector('.gm-container').outerHTML;
+        }
 
         rollback() {
             document.querySelectorAll('[class*="gm"],[id*="gm"]').forEach(gm => gm.remove());
+
             this.promoteChildren(document.querySelector('#bodyContent'));
+
             this.menuItems = [];
             this.subMenuItems = [];
             this.childMenuItems = [];
             this.subMenuContainers = [];
+
+            this.insertContent(this.body, 0, this.rollbackHtml);
         }
 
         flatternMenu() {
