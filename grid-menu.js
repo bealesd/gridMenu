@@ -430,9 +430,17 @@ GridMenu = function () {
 
         hideSubMenus = () => this.subMenuContainers.forEach(container => container.html.style.zIndex = -1);
 
-        hideSubMenu = (menuCol) => this.getSubMenuContainer(menuCol).html.style.zIndex = -1;
+        hideSubMenu(menuCol){
+			const container = this.getSubMenuContainer(menuCol);
+			container.html.style.zIndex = -1;
+			container.classList.add('gm-hidden');
+		}
 
-        showSubMenu = (menuCol) => this.getSubMenuContainer(menuCol).html.style.zIndex = 12;
+		showSubMenu(menuCol) {
+			const container = this.getSubMenuContainer(menuCol);
+			container.html.style.zIndex = 12;
+			container.classList.remove('gm-hidden');
+		}
 
         isSunMenuOpen = (subMenuItem) => subMenuItem.html.querySelector('span').classList.contains('down');
 
@@ -493,7 +501,7 @@ GridMenu = function () {
 
                 const div = document.createElement('div');
                 div.dataset.menuCol = menuCol;
-                div.className = 'gm-sub-menu-container';
+                div.className = 'gm-sub-menu-container gm-hidden';
                 div.style.left = `${menuItem.html.offsetLeft}px`;
 
                 subAndChildMenuItems.forEach(childItem => div.appendChild(childItem.html));
