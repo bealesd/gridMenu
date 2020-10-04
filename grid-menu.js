@@ -72,6 +72,7 @@ GridMenu = function () {
                     this.ready = true;
                     resolve();
                 } catch (error) {
+                    this.rollback();
                     reject();
                 }
             })
@@ -213,6 +214,15 @@ GridMenu = function () {
         }
         //#region 
 
+        rollback() {
+            document.querySelectorAll('[class*="gm"],[id*="gm"]').forEach(gm => gm.remove());
+            this.promoteChildren(document.querySelector('#bodyContent'));
+            this.menuItems = [];
+            this.subMenuItems = [];
+            this.childMenuItems = [];
+            this.subMenuContainers = [];
+        }
+
         flatternMenu() {
             this.getIntialMenuItemsDom().forEach((menuItem) => {
                 const div = document.createElement('div');
@@ -251,7 +261,10 @@ GridMenu = function () {
             const bodyContent = document.createElement('div');
             bodyContent.id = 'bodyContent';
 
-            [...this.body.children].forEach((child, index) => this.insertContent(bodyContent, index, child));
+            [...this.body.children].forEach((child, index) => {
+                if (child.nodeName.toLowerCase() !== 'script')
+                    this.insertContent(bodyContent, index, child)
+            });
             this.insertContent(this.body, 0, bodyContent);
         }
 
