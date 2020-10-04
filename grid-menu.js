@@ -4,6 +4,8 @@ GridMenu = function() {
         DOWN_ARROW = '&#9660;';
 
         constructor() {
+            this.ready = false;
+
             this.menuItems = [];
             this.subMenuItems = [];
             this.childMenuItems = [];
@@ -60,7 +62,10 @@ GridMenu = function() {
 
             this.onMenuClick();
             this.onSubMenuClick();
+
             this.onOffMenuClick();
+
+            this.ready = true;
         }
 
         //#region GETTERS
