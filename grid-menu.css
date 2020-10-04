@@ -73,7 +73,6 @@
 #bodyContent {
     height: calc(100vh - var(--heading-size));
     margin-top: var(--heading-size);
-    background-color: blue;
 }
 
 #gm-span {
