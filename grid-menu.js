@@ -13,9 +13,9 @@ GridMenu = function () {
             this.subMenuContainers = [];
             this.menuBorder = '1px solid black';
 
-            // const href = 'grid-menu.css';
+             const href = 'grid-menu.css';
             // const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@latest/grid-menu.min.css';
-            const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@57d73d67f412d63132b64919dd9264986498a512/grid-menu.min.css';
+            //const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@57d73d67f412d63132b64919dd9264986498a512/grid-menu.min.css';
             
             this.loadCss(href);
 
@@ -428,12 +428,11 @@ GridMenu = function () {
             this.menuItems.forEach(menu => menu.showChildren = false);
         }
 
-        hideSubMenus = () => this.subMenuContainers.forEach(container => container.html.style.zIndex = -1);
-
-        hideSubMenu(menuCol){
-			const container = this.getSubMenuContainer(menuCol);
-			container.html.style.zIndex = -1;
-			container.html.classList.add('gm-hidden');
+        hideSubMenus(){
+			this.subMenuContainers.forEach((container) => {
+				container.html.style.zIndex = -1;
+				container.html.classList.add('gm-hidden');
+			});
 		}
 
 		showSubMenu(menuCol) {
