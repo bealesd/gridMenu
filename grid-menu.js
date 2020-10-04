@@ -1,4 +1,4 @@
-GridMenu = function () {
+GridMenu = function() {
     class GridMenu {
         UP_ARROW = '&#x25BA;';
         DOWN_ARROW = '&#9660;';
@@ -63,6 +63,8 @@ GridMenu = function () {
             this.onMenuClick();
             this.onSubMenuClick();
 
+            this.onOffMenuClick();
+
             this.ready = true;
         }
 
@@ -79,7 +81,7 @@ GridMenu = function () {
             else
                 delegate = child => child.menuCol === args.menuCol && child.subMenuRow === args.subMenuRow && child.childMenuRow === args.childRow;
 
-            return this.childMenuItems.find(delegate);
+            return this.childMenuItems.filter(delegate);
         }
 
         getSubMenuItems(args) {
@@ -147,7 +149,7 @@ GridMenu = function () {
 
         getSubMenuContainersDom = () => {
             const subMenuContainers = [];
-            [...document.querySelectorAll(`.gm-sub-menu`)].forEach((container) => {
+            [...document.querySelectorAll(`.gm-sub-menu-container`)].forEach((container) => {
                 subMenuContainers.push({
                     'menuCol': parseInt(container.dataset.menuCol),
                     'html': container
@@ -184,22 +186,22 @@ GridMenu = function () {
         }
 
         getInitialChildMenuItems = () => {
-            const childMenuItems = [];
-            const subMenuItems = this.getInitialSubMenuItemsDom();
+                const childMenuItems = [];
+                const subMenuItems = this.getInitialSubMenuItemsDom();
 
-            subMenuItems.forEach((subMenuItem) => {
-                [...subMenuItem.html.children].forEach((childMenuItem, childMenuRow) => {
-                    childMenuItems.push({
-                        'childMenuRow': childMenuRow + 1,
-                        'subMenuRow': subMenuItem.subMenuRow,
-                        'menuCol': subMenuItem.menuCol,
-                        'html': childMenuItem
+                subMenuItems.forEach((subMenuItem) => {
+                    [...subMenuItem.html.children].forEach((childMenuItem, childMenuRow) => {
+                        childMenuItems.push({
+                            'childMenuRow': childMenuRow + 1,
+                            'subMenuRow': subMenuItem.subMenuRow,
+                            'menuCol': subMenuItem.menuCol,
+                            'html': childMenuItem
+                        });
                     });
                 });
-            });
-            return childMenuItems;
-        }
-        //#region 
+                return childMenuItems;
+            }
+            //#region 
 
         flatternMenu() {
             this.getIntialMenuItemsDom().forEach((menuItem) => {
@@ -302,21 +304,21 @@ GridMenu = function () {
 
                 if (relMaxChildRow > maxSubMenuRow) {
                     let unboundChildRowsCount = relMaxChildRow - maxSubMenuRow;
-                    for (let i = 0; i < unboundChildRowsCount; i++) {
-                        let undboundChildRow = childGroup.rowCount - i;
-                        const childItem = this.getChildMenuItems({ 'menuCol': childGroup.menuCol, 'subMenuRow': childGroup.subMenuRow, 'childRow': undboundChildRow });
+                    for (let rowIndexFromEnd = 0; rowIndexFromEnd < unboundChildRowsCount; rowIndexFromEnd++) {
+                        let undboundChildRow = childGroup.rowCount - rowIndexFromEnd;
+                        const childItem = this.getChildMenuItems({ 'menuCol': childGroup.menuCol, 'subMenuRow': childGroup.subMenuRow, 'childRow': undboundChildRow })[0];
                         childItem.html.style.borderLeft = this.menuBorder;
                         childItem.html.style.marginLeft = '-1px';
                     }
                 }
 
                 if (childGroup.subMenuRow !== 1) {
-                    const firstChildItem = this.getChildMenuItems({ 'menuCol': childGroup.menuCol, 'subMenuRow': childGroup.subMenuRow, 'childRow': 1 });
+                    const firstChildItem = this.getChildMenuItems({ 'menuCol': childGroup.menuCol, 'subMenuRow': childGroup.subMenuRow, 'childRow': 1 })[0];
                     firstChildItem.html.style.borderTop = this.menuBorder;
                 }
 
-                const lastChildItem = this.getChildMenuItems({ 'menuCol': childGroup.menuCol, 'subMenuRow': childGroup.subMenuRow, 'childRow': childGroup.rowCount });
-                lastChildItem.html.style.borderBottom = this.menuBorder;;
+                const lastChildItem = this.getChildMenuItems({ 'menuCol': childGroup.menuCol, 'subMenuRow': childGroup.subMenuRow, 'childRow': childGroup.rowCount })[0];
+                lastChildItem.html.style.borderBottom = this.menuBorder;
             });
         }
 
@@ -340,7 +342,6 @@ GridMenu = function () {
                 subMenuItem.html.innerHTML = '';
 
                 this.insertContent(subMenuItem.html, 0, div);
-
             });
         }
 
@@ -353,18 +354,13 @@ GridMenu = function () {
             });
         }
 
-        onMenuClick() {
+        onMenuClick() { //should be called register event lsistener, and that should call handle event method
             this.menuItems.forEach((menu) => {
                 menu.html.addEventListener('click', () => {
                     const showMenu = !menu.showChildren;
-
-                    this.hideSubMenus();
-                    this.hideChildMenuItems();
-
-                    this.menuItems.forEach(menu => menu.showChildren = false);
+                    this.hideMenu();
 
                     if (!showMenu) {
-                        this.hideSubMenu(menu.menuCol);
                         menu.showChildren = false;
                     } else if (showMenu) {
                         this.showSubMenu(menu.menuCol);
@@ -372,6 +368,18 @@ GridMenu = function () {
                     }
                 });
             });
+        }
+
+        onOffMenuClick() {
+            document.querySelector('#bodyContent').addEventListener('click', () => {
+                this.hideMenu();
+            });
+        }
+
+        hideMenu() {
+            this.hideSubMenus();
+            this.hideChildMenuItems();
+            this.menuItems.forEach(menu => menu.showChildren = false);
         }
 
         hideSubMenus = () => this.subMenuContainers.forEach(container => container.html.style.zIndex = -1);
@@ -432,19 +440,19 @@ GridMenu = function () {
         }
 
         moveMenuChildrenToContainers() {
-            for (let i = 1; i <= this.menuItems.length; i++) {
-                const menuItem = this.getMenuItem({ 'menuCol': i });
+            for (let menuCol = 1; menuCol <= this.menuItems.length; menuCol++) {
+                const menuItem = this.getMenuItem({ 'menuCol': menuCol });
 
-                const childItemsForMenuItem = this.getSubAndChildMenuItems(i);
+                const subAndChildMenuItems = this.getSubAndChildMenuItems(menuCol);
 
                 const div = document.createElement('div');
-                div.dataset.menuCol = i;
-                div.className = 'gm-sub-menu';
+                div.dataset.menuCol = menuCol;
+                div.className = 'gm-sub-menu-container';
                 div.style.left = `${menuItem.html.offsetLeft}px`;
 
-                childItemsForMenuItem.forEach(childItem => div.appendChild(childItem.html));
+                subAndChildMenuItems.forEach(childItem => div.appendChild(childItem.html));
 
-                this.insertContent(this.body, i - 1, div);
+                this.insertContent(this.body, menuCol - 1, div);
             }
         }
 
