@@ -73,15 +73,20 @@
 </body>
 
 <script>
-    window.addEventListener("load", () => {
+
+    window.addEventListener("load", async () => {
         const closeClickCb = () => {
             document.querySelector('#close-click').addEventListener('click', () => {
                 alert('hello from "#close-click".');
             })
         }
-
         GridMenu.registerCallback(closeClickCb);
-        GridMenu.load();
+        console.log(GridMenu.ready);
+
+        await GridMenu.load();
+        
+        console.log('fin');
+        console.log(GridMenu.ready);
     });
 
 </script>

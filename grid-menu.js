@@ -34,40 +34,43 @@ GridMenu = function () {
         registerCallback = (callback) => this.onReadyCallbacks.push(callback);
 
         load() {
-            this.body = document.querySelector('body');
+            return new Promise((resolve, reject) => {
+                this.body = document.querySelector('body');
 
-            this.flatternMenu();
+                this.flatternMenu();
 
-            this.menuItems = this.getMenuItemsDom();
-            this.subMenuItems = this.getSubMenuItemsDom();
-            this.childMenuItems = this.getChildMenuItemsDom();
+                this.menuItems = this.getMenuItemsDom();
+                this.subMenuItems = this.getSubMenuItemsDom();
+                this.childMenuItems = this.getChildMenuItemsDom();
 
-            this.removeIntialMenuHtml();
+                this.removeIntialMenuHtml();
 
-            this.moveBodyContent();
+                this.moveBodyContent();
 
-            this.moveMenuToContainer();
-            this.positionMenuItems();
+                this.moveMenuToContainer();
+                this.positionMenuItems();
 
-            this.moveMenuChildrenToContainers();
+                this.moveMenuChildrenToContainers();
 
-            this.subMenuContainers = this.getSubMenuContainersDom();
+                this.subMenuContainers = this.getSubMenuContainersDom();
 
-            this.positionSubMenuItems();
-            this.positionChildMenuItems();
+                this.positionSubMenuItems();
+                this.positionChildMenuItems();
 
-            this.createSubmMenuExpanders();
+                this.createSubmMenuExpanders();
 
-            this.addSubMenuBorders();
-            this.addChildMenuBorders();
+                this.addSubMenuBorders();
+                this.addChildMenuBorders();
 
-            this.onMenuClick();
-            this.onSubMenuClick();
+                this.onMenuClick();
+                this.onSubMenuClick();
 
-            this.onOffMenuClick();
+                this.onOffMenuClick();
 
-            this.onReadyCallbacks.forEach(cb => cb());
-            this.ready = true;
+                this.onReadyCallbacks.forEach(cb => cb());
+                this.ready = true;
+                resolve();
+            })
         }
 
         //#region GETTERS
