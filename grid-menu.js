@@ -13,9 +13,9 @@ GridMenu = function () {
             this.subMenuContainers = [];
             this.menuBorder = '1px solid black';
 
-             const href = 'grid-menu.css';
+            // const href = 'grid-menu.css';
             // const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@latest/grid-menu.min.css';
-            //const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@57d73d67f412d63132b64919dd9264986498a512/grid-menu.min.css';
+            const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@422e064acee99e2110972b53dbbd7304f47ab327/grid-menu.min.css';
             
             this.loadCss(href);
 
