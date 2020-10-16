@@ -13,14 +13,14 @@ GridMenu = function () {
             this.subMenuContainers = [];
             this.menuBorder = '1px solid black';
 
-            // const href = 'grid-menu.css';
+            const href = 'grid-menu.css';
             // const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@latest/grid-menu.min.css';
-            const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@422e064acee99e2110972b53dbbd7304f47ab327/grid-menu.min.css';
-            
+            // const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@422e064acee99e2110972b53dbbd7304f47ab327/grid-menu.min.css';
+
             this.loadCss(href);
 
             let autoLoad = false;
-            if(document.querySelector(`[data-gm-load]`) !== null)
+            if (document.querySelector(`[data-gm-load]`) !== null)
                 autoLoad = document.querySelector(`[data-gm-load]`).dataset.gmLoad.toLowerCase() === 'true';
             if (autoLoad)
                 window.addEventListener("load", () => this.load());
@@ -220,7 +220,7 @@ GridMenu = function () {
         }
         //#region 
 
-        enableRollback(){
+        enableRollback() {
             this.rollbackHtml = document.querySelector('.gm-container').outerHTML;
         }
 
@@ -285,7 +285,7 @@ GridMenu = function () {
         moveMenuToContainer() {
             const div = document.createElement('div');
             div.id = 'gm-menu-container';
-
+            div.style.gridTemplateColumns = `repeat(${this.menuItems.length}, min-content)`;
             this.menuItems.forEach((menu) => {
                 menu.html.style.gridRow = `1 / span 1`;
                 menu.html.style.gridColumn = `${menu.menuCol} / span 1`;
@@ -428,18 +428,18 @@ GridMenu = function () {
             this.menuItems.forEach(menu => menu.showChildren = false);
         }
 
-        hideSubMenus(){
-			this.subMenuContainers.forEach((container) => {
-				container.html.style.zIndex = -1;
-				container.html.classList.add('gm-hidden');
-			});
-		}
+        hideSubMenus() {
+            this.subMenuContainers.forEach((container) => {
+                container.html.style.zIndex = -1;
+                container.html.classList.add('gm-hidden');
+            });
+        }
 
-		showSubMenu(menuCol) {
-			const container = this.getSubMenuContainer(menuCol);
-			container.html.style.zIndex = 12;
-			container.html.classList.remove('gm-hidden');
-		}
+        showSubMenu(menuCol) {
+            const container = this.getSubMenuContainer(menuCol);
+            container.html.style.zIndex = 12;
+            container.html.classList.remove('gm-hidden');
+        }
 
         isSunMenuOpen = (subMenuItem) => subMenuItem.html.querySelector('span').classList.contains('down');
 
@@ -509,6 +509,9 @@ GridMenu = function () {
             }
         }
 
+        // TODO Fix
+        // add html into the parents children
+        // if html is string, convert to a html
         insertContent(parentElement, position, htmlElement) {
             if (!this.isHtmlELement(htmlElement) && !this.isString(htmlElement))
                 return;
@@ -520,17 +523,17 @@ GridMenu = function () {
                 htmlElement = htmlElement.children[0];
             }
 
-            const children = parentElement.children;
-            if (children.length === 0)
-                parentElement.appendChild(htmlElement);
+            if (parentElement.children.length === 0)
+                parentElement.append(htmlElement);
             else if (position === 0)
                 parentElement.children[0].insertAdjacentElement('beforeBegin', htmlElement);
+            else if (position > 0 && position > parentElement.children.length)
+                parentElement.lastChild.insertAdjacentElement('afterEnd', htmlElement);
             else
                 parentElement.children[position - 1].insertAdjacentElement('afterEnd', htmlElement);
-
         }
 
-        promoteChildren = (htmlElement) => htmlElement.replaceWith(...htmlElement.childNodes);
+        promoteChildren = (elem) => (elem !== null && elem !== undefined) ? elem.replaceWith(...elem.childNodes) : '';
 
         isHtmlELement = (value) =>
             (Object.prototype.toString.call(value).includes('[object HTML') &&
