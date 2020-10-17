@@ -7,15 +7,19 @@ GridMenu = function () {
             this.ready = false;
             this.onReadyCallbacks = [];
 
+            this.clickCallbacks = {};
+            this.onMouseOverCallback = {};
+            this.onMouseLeaveCallback = {};
+
             this.menuItems = [];
             this.subMenuItems = [];
             this.childMenuItems = [];
             this.subMenuContainers = [];
             this.menuBorder = '1px solid black';
 
-            // const href = 'grid-menu.css';
+            const href = 'grid-menu.css';
             // const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@latest/grid-menu.min.css';
-            const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@4d2cad60f65d035b26be0b12cb4828578638618a/grid-menu.min.css';
+            // const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@4d2cad60f65d035b26be0b12cb4828578638618a/grid-menu.min.css';
 
             this.loadCss(href);
 
@@ -74,6 +78,8 @@ GridMenu = function () {
 
                     this.onOffMenuClick();
 
+                    this.onMenuItemsHover();
+
                     this.onReadyCallbacks.forEach(cb => cb());
                     this.ready = true;
                     resolve();
@@ -121,6 +127,8 @@ GridMenu = function () {
         }
 
         getSubAndChildMenuItems = (menuCol) => [...this.subMenuItems.filter(subItem => subItem.menuCol === menuCol), ...this.childMenuItems.filter(childItem => childItem.menuCol === menuCol)];
+
+        getMenuItemsAll = () => [...this.menuItems, ...this.subMenuItems, ...this.childMenuItems];
 
         getSubMenuContainer = (menuCol) => this.subMenuContainers.find(container => container.menuCol === menuCol);
 
@@ -394,6 +402,8 @@ GridMenu = function () {
         onMenuClick() { //should be called register event lsistener, and that should call handle event method
             this.menuItems.forEach((menu) => {
                 menu.html.addEventListener('click', () => {
+                    if (menu.html.classList.contains('gm-disabled')) return;
+
                     const showMenu = !menu.showChildren;
                     this.hideMenu();
 
@@ -420,6 +430,67 @@ GridMenu = function () {
                     else return;
                 });
             })
+        }
+
+        onMenuItemsHover() {
+            const allMenuItems = this.getMenuItemsAll();
+            allMenuItems.forEach((childItem) => {
+                const html = childItem.html;
+                const cbMouseOver = () => { html.classList.add('menu-item-hover'); }
+                const cbMouseLeave = () => { html.classList.remove('menu-item-hover'); }
+
+                if (html.id !== '') {
+                    this.onMouseOverCallback[html.id] = cbMouseOver;
+                    this.onMouseLeaveCallback[html.id] = cbMouseLeave;
+                }
+
+                html.addEventListener('mouseover', cbMouseOver);
+                html.addEventListener('mouseleave', cbMouseLeave);
+            });
+        }
+
+        disableMenuItem(id) {
+            const allMenuItems = this.getMenuItemsAll();
+            const el = allMenuItems.find(item => item.html.id === id).html;
+
+            if (this.clickCallbacks.hasOwnProperty(id)) {
+                this.clickCallbacks[id].forEach((cb) => { el.removeEventListener('click', cb) });
+                this.clickCallbacks[id] = [];
+            }
+            if (this.onMouseOverCallback.hasOwnProperty(id))
+                el.removeEventListener('mouseover', this.onMouseOverCallback[id]);
+            if (this.onMouseLeaveCallback.hasOwnProperty(id))
+                el.removeEventListener('mouseleave', this.onMouseLeaveCallback[id]);
+
+            el.classList.add('gm-disabled');
+        }
+
+        enableMenuItem(id) {
+            const allMenuItems = this.getMenuItemsAll();
+            const el = allMenuItems.find(item => item.html.id === id).html;
+            el.classList.remove('gm-disabled');
+            el.addEventListener('mouseleave', this.onMouseLeaveCallback[id]);
+            el.addEventListener('mouseover', this.onMouseOverCallback[id]);
+        }
+
+        addMenuItemClickEvent(id, callback) {
+            if (!this.clickCallbacks.hasOwnProperty(id)) this.clickCallbacks[id] = [];
+
+            const allMenuItems = this.getMenuItemsAll();
+            const el = allMenuItems.find(item => item.html.id === id).html;
+
+            const cb = () => { if (!el.classList.contains('gm-disabled')) callback(); }
+            this.clickCallbacks[id].push(cb);
+            el.addEventListener('click', cb);
+        }
+
+        // alternative to hideMenu
+        closeMenu() {
+            document.querySelectorAll('.gm-sub-menu-container').forEach((container) => {
+                if (!container.classList.contains('gm-hidden'))
+                    container.classList.add('gm-hidden');
+            });
+            this.menuItems.forEach(menu => menu.showChildren = false);
         }
 
         hideMenu() {
@@ -462,6 +533,8 @@ GridMenu = function () {
         hideOtherSubMenuItemChildren = (subMenuItem) => this.subMenuItems.forEach(item => (item.html !== subMenuItem.html) && this.hideSubMenuItemChildren(item));
 
         showSubMenuItemChildren(subMenuItem) {
+            if (subMenuItem.html.classList.contains('gm-disabled')) return;
+
             if (!this.subMenuItemHasChidlren(subMenuItem)) return;
 
             const subMenuSpan = subMenuItem.html.querySelector('span');

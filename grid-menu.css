@@ -29,8 +29,10 @@
     margin-left: 20px;
 }
 
-[class*="menu-item"]:hover,
-.gm-menu:hover {
+/* [class*="menu-item"]:hover,
+.gm-menu:hover  */
+.menu-item-hover
+{
     color: white !important;
     background-color: black !important;
     cursor: pointer !important;
@@ -51,6 +53,10 @@
     border-right: solid black 1px;
     padding-bottom: var(--header-vertical-padding);
     padding-top: var(--header-vertical-padding);
+}
+
+.gm-disabled{
+    color: lightgray;
 }
 
 .gm-sub-menu-item {
