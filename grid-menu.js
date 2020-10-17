@@ -461,7 +461,8 @@ GridMenu = function () {
                 el.removeEventListener('mouseover', this.onMouseOverCallback[id]);
             if (this.onMouseLeaveCallback.hasOwnProperty(id))
                 el.removeEventListener('mouseleave', this.onMouseLeaveCallback[id]);
-
+                
+            el.classList.remove('menu-item-hover')
             el.classList.add('gm-disabled');
         }
 
