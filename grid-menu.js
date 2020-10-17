@@ -19,7 +19,7 @@ GridMenu = function () {
 
             // const href = 'grid-menu.css';
             // const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@latest/grid-menu.min.css';
-            const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@9136640fcd10b326aad6007a8b64fae0a9783d36/grid-menu.min.css';
+            const href = 'https://cdn.jsdelivr.net/gh/bealesd/GridMenu@7e39120d2ca4a30b6ed0e42f5fce7484979cdfaf/grid-menu.min.css';
 
             this.loadCss(href);
 
@@ -461,7 +461,7 @@ GridMenu = function () {
                 el.removeEventListener('mouseover', this.onMouseOverCallback[id]);
             if (this.onMouseLeaveCallback.hasOwnProperty(id))
                 el.removeEventListener('mouseleave', this.onMouseLeaveCallback[id]);
-                
+
             el.classList.remove('menu-item-hover')
             el.classList.add('gm-disabled');
         }
